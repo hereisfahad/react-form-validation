@@ -12,7 +12,7 @@ class Form extends React.Component {
       validEmail: false,
       validFullName: false,
       validPassword: false,
-      validForm: true,
+      validForm: false,
       errors: {
         fullName: "",
         email: "",
@@ -23,6 +23,7 @@ class Form extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.validateField = this.validateField.bind(this);
     this.validateForm = this.validateForm.bind(this);
+    // this.setValidStateToTrue = this.setValidStateToTrue.bind(this)
   }
 
   handleSubmit = event => {
@@ -56,11 +57,9 @@ class Form extends React.Component {
           fieldValue.length < 5 ? "Full Name must be 5 characters long!" : "";
         validationErrors.fullName = validFullName;
         {
-          if (validFullName.length < 0) {
-            this.setState({
-              validFullName: fieldValue
-            });
-          }
+          if (validFullName.length === 0 && this.state.fullName !== '') {
+            this.setState({validFullName: true},()=>this.validateForm());
+          }else{this.setState({validFullName: false},()=>this.validateForm());}
         }
         break;
       case "email":
@@ -68,36 +67,41 @@ class Form extends React.Component {
           ? ""
           : "Email is not valid!";
         validationErrors.email = validEmail;
+        {
+          if (validEmail.length === 0 && this.state.email !=='')  {
+            this.setState({validEmail: true},()=>this.validateForm());
+          }else{this.setState({validEmail: false},()=>this.validateForm());}
+        }
         break;
       case "password":
         validPassword =
           fieldValue.length < 8 ? "Password must be 8 characters long!" : "";
         validationErrors.password = validPassword;
+        {
+          if (validPassword.length === 0 && this.state.password !=='')  {
+            this.setState({validPassword: true},()=>this.validateForm());
+          }else{this.setState({validPassword: false},()=>this.validateForm());}
+        }
         break;
       default:
         break;
     }
-
-    this.setState(
-      {
-        errors: validationErrors,
-        validEmail: validEmail,
-        validFullName: validFullName,
-        validPassword: validPassword
-      },
-      () => {
-        console.log(this.state);
-        this.setState({
-          validForm:
-            this.state.validPassword &&
-            this.state.validFullName &&
-            this.state.validEmail
-        });
-      }
-    );
+  }
+  // setValidStateToTrue=()=>{
+  //   this.setState({
+  //     validPassword: true
+  //   },()=>this.validateForm());
+  // }
+  // setValidStateToFalse=()=>{
+  //   this.setState({
+  //     validPassword: false
+  //   },()=>this.validateForm());
+  // }
+  validateForm = ()=>{ 
+    // console.log(this.validFullName, this.validPassword, this.validEmail)
+    this.setState({validForm: this.state.validFullName && this.state.validPassword && this.state.validEmail})
   }
 
-  validateForm() {}
 
   render() {
     return (
