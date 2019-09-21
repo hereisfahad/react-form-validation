@@ -19,11 +19,6 @@ class Form extends React.Component {
         password: ""
       }
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.validateField = this.validateField.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-    // this.setValidStateToTrue = this.setValidStateToTrue.bind(this)
   }
 
   handleSubmit = event => {
@@ -45,61 +40,46 @@ class Form extends React.Component {
 
   validateField(fieldName, fieldValue) {
     let validationErrors = this.state.errors;
-    let validFullName = this.state.validFullName;
-    let validEmail = this.state.validEmail;
-    let validPassword = this.state.validPassword;
-
     const validEmailRegex = RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 
     switch (fieldName) {
       case "fullName":
-        validFullName =
-          fieldValue.length < 5 ? "Full Name must be 5 characters long!" : "";
-        validationErrors.fullName = validFullName;
-        {
-          if (validFullName.length === 0 && this.state.fullName !== '') {
-            this.setState({validFullName: true},()=>this.validateForm());
-          }else{this.setState({validFullName: false},()=>this.validateForm());}
-        }
+        validationErrors.fullName =
+          fieldValue.length < 5
+          ? ( 
+            this.setState( { validFullName: false }, ()=>this.validateForm() ),
+              "Full Name must be 5 characters long!" 
+              )
+          : ( 
+            this.setState( { validFullName: true }, ()=>this.validateForm() ),
+             '' 
+             );
         break;
+
       case "email":
-        validEmail = validEmailRegex.test(fieldValue)
-          ? ""
-          : "Email is not valid!";
-        validationErrors.email = validEmail;
-        {
-          if (validEmail.length === 0 && this.state.email !=='')  {
-            this.setState({validEmail: true},()=>this.validateForm());
-          }else{this.setState({validEmail: false},()=>this.validateForm());}
-        }
+        validationErrors.email = validEmailRegex.test(fieldValue)
+          ? ( this.setState( { validEmail: true }, ()=>this.validateForm() ), "" )
+          : ( this.setState( { validEmail: false }, ()=>this.validateForm() ), "Email is not valid!" );
         break;
+
       case "password":
-        validPassword =
-          fieldValue.length < 8 ? "Password must be 8 characters long!" : "";
-        validationErrors.password = validPassword;
-        {
-          if (validPassword.length === 0 && this.state.password !=='')  {
-            this.setState({validPassword: true},()=>this.validateForm());
-          }else{this.setState({validPassword: false},()=>this.validateForm());}
-        }
+        validationErrors.password =
+          fieldValue.length < 8
+           ? ( this.setState( { validPassword: false }, ()=>this.validateForm() ), "Password must be 8 characters long!")
+           : ( this.setState( { validPassword: true }, ()=>this.validateForm() ), "" );
         break;
+
       default:
         break;
     }
+    
   }
-  // setValidStateToTrue=()=>{
-  //   this.setState({
-  //     validPassword: true
-  //   },()=>this.validateForm());
-  // }
-  // setValidStateToFalse=()=>{
-  //   this.setState({
-  //     validPassword: false
-  //   },()=>this.validateForm());
-  // }
+//update the validForm property in the state to which is then used to diabeled the submit button
   validateForm = ()=>{ 
-    // console.log(this.validFullName, this.validPassword, this.validEmail)
-    this.setState({validForm: this.state.validFullName && this.state.validPassword && this.state.validEmail})
+    this.setState({
+      validForm: 
+      this.state.validFullName && this.state.validPassword && this.state.validEmail
+    },console.log(this.state))
   }
 
 
